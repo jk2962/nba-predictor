@@ -13,22 +13,27 @@ export default function PredictionCard({
     showConfidence = true
 }: PredictionCardProps) {
     return (
-        <div className="card" style={{ padding: '1.5rem' }}>
+        <div className="card" style={{ padding: 'var(--space-lg)' }}>
             <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                marginBottom: '1.25rem',
+                justifyContent: 'space-between',
+                marginBottom: 'var(--space-lg)',
             }}>
-                <span style={{ fontSize: '1.5rem' }}>🔮</span>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>
+                <h3 style={{
+                    fontSize: '1.125rem',
+                    fontWeight: 600,
+                    color: 'var(--text-primary)',
+                    letterSpacing: '-0.01em',
+                }}>
                     Next Game Prediction
                 </h3>
                 {prediction.opponent_team && (
                     <span style={{
-                        marginLeft: 'auto',
-                        fontSize: '0.875rem',
-                        color: 'var(--color-text-secondary)',
+                        fontSize: '0.8125rem',
+                        color: 'var(--text-tertiary)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.02em',
                     }}>
                         vs {prediction.opponent_team} {prediction.is_home ? '(Home)' : '(Away)'}
                     </span>
@@ -38,14 +43,13 @@ export default function PredictionCard({
             <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '1rem',
+                gap: 'var(--space-md)',
             }}>
                 <PredictionStat
                     label="Points"
                     value={prediction.predicted_points}
                     lower={prediction.points_lower}
                     upper={prediction.points_upper}
-                    color="#6366f1"
                     showConfidence={showConfidence}
                 />
                 <PredictionStat
@@ -53,7 +57,6 @@ export default function PredictionCard({
                     value={prediction.predicted_rebounds}
                     lower={prediction.rebounds_lower}
                     upper={prediction.rebounds_upper}
-                    color="#22c55e"
                     showConfidence={showConfidence}
                 />
                 <PredictionStat
@@ -61,41 +64,27 @@ export default function PredictionCard({
                     value={prediction.predicted_assists}
                     lower={prediction.assists_lower}
                     upper={prediction.assists_upper}
-                    color="#f97316"
                     showConfidence={showConfidence}
                 />
             </div>
 
             {prediction.fantasy_score && (
                 <div style={{
-                    marginTop: '1.25rem',
-                    paddingTop: '1.25rem',
-                    borderTop: '1px solid rgba(255,255,255,0.1)',
+                    marginTop: 'var(--space-lg)',
+                    paddingTop: 'var(--space-lg)',
+                    borderTop: '1px solid var(--border-subtle)',
                     display: 'flex',
                     justifyContent: 'center',
+                    alignItems: 'baseline',
+                    gap: 'var(--space-sm)',
                 }}>
-                    <div style={{
-                        background: 'var(--gradient-primary)',
-                        padding: '0.75rem 2rem',
-                        borderRadius: '2rem',
-                        textAlign: 'center',
+                    <div className="data-label">
+                        Projected Fantasy
+                    </div>
+                    <div className="data-primary" style={{
+                        color: 'var(--hot)',
                     }}>
-                        <div style={{
-                            fontSize: '0.7rem',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.1em',
-                            color: 'rgba(255,255,255,0.8)',
-                            marginBottom: '0.25rem',
-                        }}>
-                            Projected Fantasy
-                        </div>
-                        <div style={{
-                            fontSize: '1.5rem',
-                            fontWeight: 700,
-                            color: 'white',
-                        }}>
-                            {prediction.fantasy_score.toFixed(1)}
-                        </div>
+                        {prediction.fantasy_score.toFixed(1)}
                     </div>
                 </div>
             )}
@@ -108,14 +97,12 @@ function PredictionStat({
     value,
     lower,
     upper,
-    color,
     showConfidence,
 }: {
     label: string;
     value: number;
     lower: number;
     upper: number;
-    color: string;
     showConfidence: boolean;
 }) {
     // Calculate confidence width based on range relative to value
@@ -124,26 +111,21 @@ function PredictionStat({
 
     return (
         <div style={{
-            background: 'rgba(0,0,0,0.2)',
-            borderRadius: '0.75rem',
-            padding: '1rem',
+            background: 'var(--surface-1)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            padding: 'var(--space-md)',
             textAlign: 'center',
         }}>
-            <div style={{
-                fontSize: '0.8rem',
-                color: 'var(--color-text-secondary)',
-                marginBottom: '0.5rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
+            <div className="data-label" style={{
+                marginBottom: 'var(--space-sm)',
             }}>
                 {label}
             </div>
 
-            <div style={{
-                fontSize: '2rem',
-                fontWeight: 700,
-                color,
-                marginBottom: '0.5rem',
+            <div className="data-primary" style={{
+                color: 'var(--hot)',
+                marginBottom: 'var(--space-sm)',
             }}>
                 {value.toFixed(1)}
             </div>
@@ -152,8 +134,9 @@ function PredictionStat({
                 <>
                     <div style={{
                         fontSize: '0.75rem',
-                        color: 'var(--color-text-muted)',
-                        marginBottom: '0.5rem',
+                        color: 'var(--text-tertiary)',
+                        marginBottom: 'var(--space-sm)',
+                        fontVariantNumeric: 'tabular-nums',
                     }}>
                         {lower.toFixed(1)} - {upper.toFixed(1)}
                     </div>
@@ -163,14 +146,15 @@ function PredictionStat({
                             className="confidence-bar-fill"
                             style={{
                                 width: `${confidenceWidth}%`,
-                                background: `linear-gradient(90deg, ${color}88, ${color})`,
                             }}
                         />
                     </div>
                     <div style={{
-                        fontSize: '0.65rem',
-                        color: 'var(--color-text-muted)',
-                        marginTop: '0.25rem',
+                        fontSize: '0.6875rem',
+                        color: 'var(--text-muted)',
+                        marginTop: 'var(--space-xs)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.02em',
                     }}>
                         95% Confidence
                     </div>

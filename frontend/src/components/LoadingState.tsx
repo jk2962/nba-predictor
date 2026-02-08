@@ -30,12 +30,12 @@ export function LoadingState({ message = 'Loading...' }: { message?: string }) {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '4rem 2rem',
-                gap: '1.5rem',
+                padding: 'var(--space-2xl)',
+                gap: 'var(--space-lg)',
             }}
         >
             <Spinner size="lg" />
-            <p style={{ color: 'var(--color-text-secondary)' }}>{message}</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9375rem' }}>{message}</p>
         </div>
     );
 }
@@ -58,15 +58,29 @@ export function ErrorState({
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '3rem 2rem',
-                gap: '1rem',
+                padding: 'var(--space-2xl)',
+                gap: 'var(--space-md)',
                 textAlign: 'center',
-                borderColor: 'rgba(239, 68, 68, 0.3)',
+                borderColor: 'var(--error)',
             }}
         >
-            <span style={{ fontSize: '3rem' }}>⚠️</span>
-            <h3 style={{ color: 'var(--color-error)' }}>Error</h3>
-            <p style={{ color: 'var(--color-text-secondary)', maxWidth: '400px' }}>
+            <div style={{
+                width: '48px',
+                height: '48px',
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--surface-3)',
+                border: '2px solid var(--error)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.5rem',
+                fontWeight: 700,
+                color: 'var(--error)',
+            }}>
+                !
+            </div>
+            <h3 style={{ color: 'var(--error)', fontSize: '1.125rem' }}>Error</h3>
+            <p style={{ color: 'var(--text-secondary)', maxWidth: '400px', fontSize: '0.9375rem' }}>
                 {message}
             </p>
             {onRetry && (
@@ -84,11 +98,9 @@ export function ErrorState({
 export function EmptyState({
     title = 'No data found',
     description = 'Try adjusting your search or filters.',
-    icon = '🔍',
 }: {
     title?: string;
     description?: string;
-    icon?: string;
 }) {
     return (
         <div
@@ -97,14 +109,31 @@ export function EmptyState({
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '4rem 2rem',
-                gap: '1rem',
+                padding: 'var(--space-2xl)',
+                gap: 'var(--space-md)',
                 textAlign: 'center',
             }}
         >
-            <span style={{ fontSize: '3rem', opacity: 0.5 }}>{icon}</span>
-            <h3 style={{ color: 'var(--color-text-primary)' }}>{title}</h3>
-            <p style={{ color: 'var(--color-text-secondary)', maxWidth: '400px' }}>
+            <div style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: 'var(--radius-lg)',
+                background: 'var(--surface-2)',
+                border: '1px solid var(--border)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}>
+                <div style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    border: '3px solid var(--border-emphasis)',
+                    borderTopColor: 'transparent',
+                }} />
+            </div>
+            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.125rem' }}>{title}</h3>
+            <p style={{ color: 'var(--text-secondary)', maxWidth: '400px', fontSize: '0.9375rem' }}>
                 {description}
             </p>
         </div>

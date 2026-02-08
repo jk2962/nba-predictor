@@ -39,16 +39,17 @@ export default function PlayerCard({ player, showPredictions = false }: PlayerCa
         >
             <div style={{
                 display: 'flex',
-                gap: '1rem',
+                gap: 'var(--space-md)',
                 alignItems: 'center',
             }}>
                 {/* Player Image */}
                 <div style={{
-                    width: '80px',
-                    height: '80px',
-                    borderRadius: '1rem',
+                    width: '72px',
+                    height: '72px',
+                    borderRadius: 'var(--radius-lg)',
                     overflow: 'hidden',
-                    background: 'var(--color-bg-tertiary)',
+                    background: 'var(--surface-3)',
+                    border: '1px solid var(--border)',
                     flexShrink: 0,
                 }}>
                     {player.headshot_url ? (
@@ -71,9 +72,11 @@ export default function PlayerCard({ player, showPredictions = false }: PlayerCa
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontSize: '2rem',
+                            fontSize: '1.5rem',
+                            fontWeight: 700,
+                            color: 'var(--text-muted)',
                         }}>
-                            🏀
+                            {playerName.charAt(0)}
                         </div>
                     )}
                 </div>
@@ -83,8 +86,8 @@ export default function PlayerCard({ player, showPredictions = false }: PlayerCa
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.5rem',
-                        marginBottom: '0.25rem',
+                        gap: 'var(--space-sm)',
+                        marginBottom: 'var(--space-xs)',
                     }}>
                         {player.position && (
                             <span
@@ -94,21 +97,24 @@ export default function PlayerCard({ player, showPredictions = false }: PlayerCa
                             </span>
                         )}
                         <h3 style={{
-                            fontSize: '1.1rem',
+                            fontSize: '1rem',
                             fontWeight: 600,
-                            color: 'var(--color-text-primary)',
+                            color: 'var(--text-primary)',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
+                            letterSpacing: '-0.01em',
                         }}>
                             {playerName}
                         </h3>
                     </div>
 
                     <p style={{
-                        fontSize: '0.875rem',
-                        color: 'var(--color-text-secondary)',
-                        marginBottom: '0.75rem',
+                        fontSize: '0.8125rem',
+                        color: 'var(--text-tertiary)',
+                        marginBottom: 'var(--space-sm)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.02em',
                     }}>
                         {player.team_abbreviation || player.team || 'Free Agent'}
                     </p>
@@ -116,7 +122,7 @@ export default function PlayerCard({ player, showPredictions = false }: PlayerCa
                     {/* Stats */}
                     <div style={{
                         display: 'flex',
-                        gap: '0.75rem',
+                        gap: 'var(--space-sm)',
                     }}>
                         {showPredictions && isTopPerformer ? (
                             <>
@@ -155,24 +161,17 @@ export default function PlayerCard({ player, showPredictions = false }: PlayerCa
                 {/* Fantasy Score (for top performers) */}
                 {isTopPerformer && (
                     <div style={{
-                        textAlign: 'center',
-                        padding: '0.75rem',
-                        background: 'var(--gradient-primary)',
-                        borderRadius: '0.75rem',
-                        minWidth: '70px',
+                        textAlign: 'right',
+                        minWidth: '64px',
                     }}>
-                        <div style={{
-                            fontSize: '1.25rem',
-                            fontWeight: 700,
-                            color: 'white',
+                        <div className="data-primary" style={{
+                            fontSize: '1.75rem',
+                            color: 'var(--hot)',
+                            marginBottom: 'var(--space-xs)',
                         }}>
                             {(player as TopPerformer).fantasy_score.toFixed(1)}
                         </div>
-                        <div style={{
-                            fontSize: '0.65rem',
-                            color: 'rgba(255,255,255,0.8)',
-                            textTransform: 'uppercase',
-                        }}>
+                        <div className="data-label">
                             Fantasy
                         </div>
                     </div>
@@ -192,21 +191,19 @@ function StatBadge({
     isPrediction?: boolean;
 }) {
     return (
-        <div className="stat-badge" style={{
-            background: isPrediction
-                ? 'linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(251, 146, 60, 0.2))'
-                : 'var(--gradient-card)',
-            borderColor: isPrediction ? 'rgba(249, 115, 22, 0.3)' : undefined,
-        }}>
+        <div className="stat-badge">
             <span style={{
-                color: isPrediction ? 'var(--color-nba-orange)' : 'var(--color-accent-primary)',
-                fontWeight: 600,
+                color: isPrediction ? 'var(--hot)' : 'var(--text-primary)',
+                fontWeight: 700,
+                fontSize: '0.875rem',
             }}>
                 {value.toFixed(1)}
             </span>
             <span style={{
-                color: 'var(--color-text-muted)',
-                fontSize: '0.75rem',
+                color: 'var(--text-tertiary)',
+                fontSize: '0.6875rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.02em',
             }}>
                 {label}
             </span>

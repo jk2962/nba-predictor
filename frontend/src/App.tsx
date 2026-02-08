@@ -26,12 +26,12 @@ function App() {
         {/* Footer */}
         <footer style={{
           textAlign: 'center',
-          padding: '1.5rem',
-          borderTop: '1px solid rgba(255,255,255,0.1)',
-          color: 'var(--color-text-muted)',
-          fontSize: '0.85rem',
+          padding: 'var(--space-lg)',
+          borderTop: '1px solid var(--border-subtle)',
+          color: 'var(--text-tertiary)',
+          fontSize: '0.8125rem',
         }}>
-          <p>NBA Player Performance Prediction MVP • Powered by XGBoost</p>
+          <p style={{ margin: 0 }}>NBA Player Performance Prediction • Powered by XGBoost</p>
         </footer>
       </div>
     </Router>

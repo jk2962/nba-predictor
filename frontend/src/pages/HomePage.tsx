@@ -60,29 +60,29 @@ export default function HomePage() {
     };
 
     return (
-        <div className="container" style={{ padding: '2rem 1.5rem' }}>
+        <div className="container" style={{ padding: 'var(--space-2xl) var(--space-lg)' }}>
             {/* Hero Section */}
             <section style={{
                 textAlign: 'center',
-                marginBottom: '3rem',
+                marginBottom: 'var(--space-2xl)',
             }}>
                 <h1 style={{
-                    fontSize: '2.75rem',
+                    fontSize: '2.5rem',
                     fontWeight: 700,
-                    marginBottom: '1rem',
-                    background: 'linear-gradient(135deg, #fff 0%, #94a3b8 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
+                    marginBottom: 'var(--space-md)',
+                    color: 'var(--text-primary)',
+                    letterSpacing: '-0.03em',
                 }}>
-                    NBA Performance Predictor
+                    Performance Predictor
                 </h1>
                 <p style={{
-                    fontSize: '1.125rem',
-                    color: 'var(--color-text-secondary)',
-                    maxWidth: '600px',
-                    margin: '0 auto 2rem',
+                    fontSize: '1rem',
+                    color: 'var(--text-secondary)',
+                    maxWidth: '560px',
+                    margin: '0 auto var(--space-xl)',
+                    lineHeight: 1.5,
                 }}>
-                    2025-26 Season • AI-powered predictions for fantasy basketball. Search players, view stats,
+                    AI-powered predictions for fantasy basketball. Search players, view stats,
                     and get next-game performance forecasts.
                 </p>
 
@@ -90,9 +90,9 @@ export default function HomePage() {
                 <div style={{
                     display: 'flex',
                     justifyContent: 'center',
-                    marginBottom: '2rem',
+                    marginBottom: 'var(--space-xl)',
                 }}>
-                    <SearchBar placeholder="Search for any NBA player..." />
+                    <SearchBar placeholder="Search players..." />
                 </div>
 
                 {/* Model Metrics Badge */}
@@ -100,19 +100,19 @@ export default function HomePage() {
                     <div style={{
                         display: 'flex',
                         justifyContent: 'center',
-                        gap: '1.5rem',
+                        gap: 'var(--space-md)',
                         flexWrap: 'wrap',
                     }}>
                         <MetricBadge
-                            label="Points Model"
+                            label="Points"
                             mae={metrics.points_model.mae}
                         />
                         <MetricBadge
-                            label="Rebounds Model"
+                            label="Rebounds"
                             mae={metrics.rebounds_model.mae}
                         />
                         <MetricBadge
-                            label="Assists Model"
+                            label="Assists"
                             mae={metrics.assists_model.mae}
                         />
                     </div>
@@ -125,25 +125,23 @@ export default function HomePage() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    marginBottom: '1.5rem',
+                    marginBottom: 'var(--space-lg)',
                     flexWrap: 'wrap',
-                    gap: '1rem',
+                    gap: 'var(--space-md)',
                 }}>
                     <h2 style={{
                         fontSize: '1.5rem',
                         fontWeight: 600,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
+                        color: 'var(--text-primary)',
+                        letterSpacing: '-0.02em',
                     }}>
-                        <span>🔥</span>
                         Top Predicted Performers
                     </h2>
 
                     {/* Sort Filter */}
                     <div style={{
                         display: 'flex',
-                        gap: '0.5rem',
+                        gap: 'var(--space-xs)',
                     }}>
                         {(['fantasy', 'points', 'rebounds', 'assists'] as const).map((stat) => (
                             <button
@@ -151,8 +149,6 @@ export default function HomePage() {
                                 onClick={() => setSortBy(stat)}
                                 className={sortBy === stat ? 'btn btn-primary' : 'btn btn-secondary'}
                                 style={{
-                                    padding: '0.5rem 1rem',
-                                    fontSize: '0.85rem',
                                     textTransform: 'capitalize',
                                 }}
                             >
@@ -171,7 +167,6 @@ export default function HomePage() {
                     <EmptyState
                         title="No predictions available"
                         description="Run the seed script to populate player data and train models."
-                        icon="📊"
                     />
                 ) : (
                     <>
@@ -194,27 +189,23 @@ export default function HomePage() {
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                gap: '1.5rem',
-                                marginTop: '2rem',
-                                paddingTop: '1.5rem',
-                                borderTop: '1px solid var(--color-border)',
+                                gap: 'var(--space-lg)',
+                                marginTop: 'var(--space-xl)',
+                                paddingTop: 'var(--space-lg)',
+                                borderTop: '1px solid var(--border-subtle)',
                             }}>
                                 <button
                                     onClick={goToPreviousPage}
                                     disabled={currentPage === 0}
                                     className="btn btn-secondary"
-                                    style={{
-                                        padding: '0.75rem 1.5rem',
-                                        opacity: currentPage === 0 ? 0.5 : 1,
-                                        cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
-                                    }}
                                 >
                                     ← Previous
                                 </button>
 
                                 <span style={{
-                                    fontSize: '0.95rem',
-                                    color: 'var(--color-text-secondary)',
+                                    fontSize: '0.875rem',
+                                    color: 'var(--text-secondary)',
+                                    fontVariantNumeric: 'tabular-nums',
                                 }}>
                                     Page {currentPage + 1} of {totalPages}
                                 </span>
@@ -223,11 +214,6 @@ export default function HomePage() {
                                     onClick={goToNextPage}
                                     disabled={currentPage >= totalPages - 1}
                                     className="btn btn-secondary"
-                                    style={{
-                                        padding: '0.75rem 1.5rem',
-                                        opacity: currentPage >= totalPages - 1 ? 0.5 : 1,
-                                        cursor: currentPage >= totalPages - 1 ? 'not-allowed' : 'pointer',
-                                    }}
                                 >
                                     Next →
                                 </button>
@@ -247,25 +233,38 @@ function MetricBadge({ label, mae }: { label: string; mae: number }) {
         <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.5rem',
+            gap: 'var(--space-sm)',
             padding: '0.5rem 1rem',
-            background: 'var(--color-bg-tertiary)',
-            borderRadius: '2rem',
-            fontSize: '0.85rem',
+            background: 'var(--surface-2)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
+            fontSize: '0.8125rem',
         }}>
             <span style={{
-                color: isGood ? 'var(--color-success)' : 'var(--color-warning)',
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                background: isGood ? 'var(--success)' : 'var(--warning)',
+            }} />
+            <span style={{
+                color: 'var(--text-tertiary)',
+                letterSpacing: '0.02em',
+                textTransform: 'uppercase',
             }}>
-                {isGood ? '✓' : '⚠'}
-            </span>
-            <span style={{ color: 'var(--color-text-secondary)' }}>
-                {label}:
+                {label}
             </span>
             <span style={{
                 fontWeight: 600,
-                color: isGood ? 'var(--color-success)' : 'var(--color-warning)',
+                color: 'var(--text-primary)',
+                fontVariantNumeric: 'tabular-nums',
             }}>
-                MAE {mae.toFixed(2)}
+                {mae.toFixed(2)}
+            </span>
+            <span style={{
+                fontSize: '0.75rem',
+                color: 'var(--text-muted)',
+            }}>
+                MAE
             </span>
         </div>
     );

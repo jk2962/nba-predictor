@@ -4,9 +4,9 @@
 import { Link, useLocation } from 'react-router-dom';
 
 const navItems = [
-    { path: '/', label: 'Home', icon: '🏠' },
-    { path: '/compare', label: 'Compare', icon: '⚖️' },
-    { path: '/draft', label: 'Draft Helper', icon: '📋' },
+    { path: '/', label: 'Players' },
+    { path: '/compare', label: 'Compare' },
+    { path: '/draft', label: 'Draft' },
 ];
 
 export default function Navbar() {
@@ -14,9 +14,8 @@ export default function Navbar() {
 
     return (
         <nav style={{
-            background: 'rgba(15, 15, 26, 0.95)',
-            backdropFilter: 'blur(10px)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            background: 'var(--base)',
+            borderBottom: '1px solid var(--border)',
             position: 'sticky',
             top: 0,
             zIndex: 50,
@@ -25,35 +24,47 @@ export default function Navbar() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                height: '70px',
+                height: '64px',
             }}>
                 {/* Logo */}
                 <Link to="/" style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.75rem',
+                    gap: 'var(--space-md)',
                     textDecoration: 'none',
                 }}>
-                    <span style={{
-                        fontSize: '1.75rem',
-                    }}>🏀</span>
+                    <div style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: 'var(--radius-md)',
+                        background: 'var(--hot)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.125rem',
+                        fontWeight: 700,
+                        color: 'white',
+                    }}>
+                        N
+                    </div>
                     <div>
                         <h1 style={{
-                            fontSize: '1.25rem',
+                            fontSize: '1.125rem',
                             fontWeight: 700,
-                            background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
+                            color: 'var(--text-primary)',
                             margin: 0,
+                            letterSpacing: '-0.01em',
                         }}>
                             NBA Predictor
                         </h1>
                         <p style={{
-                            fontSize: '0.7rem',
-                            color: 'var(--color-text-muted)',
+                            fontSize: '0.6875rem',
+                            color: 'var(--text-tertiary)',
                             margin: 0,
+                            letterSpacing: '0.02em',
+                            textTransform: 'uppercase',
                         }}>
-                            AI-Powered Performance
+                            2025-26 Season
                         </p>
                     </div>
                 </Link>
@@ -61,32 +72,30 @@ export default function Navbar() {
                 {/* Nav Links */}
                 <div style={{
                     display: 'flex',
-                    gap: '0.5rem',
+                    gap: 'var(--space-xs)',
                 }}>
-                    {navItems.map(({ path, label, icon }) => {
+                    {navItems.map(({ path, label }) => {
                         const isActive = location.pathname === path;
                         return (
                             <Link
                                 key={path}
                                 to={path}
                                 style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '0.5rem',
-                                    padding: '0.6rem 1.25rem',
-                                    borderRadius: '0.75rem',
-                                    fontSize: '0.95rem',
+                                    padding: '0.5rem 1rem',
+                                    borderRadius: 'var(--radius-md)',
+                                    fontSize: '0.875rem',
                                     fontWeight: 500,
-                                    color: isActive ? 'white' : 'var(--color-text-secondary)',
-                                    background: isActive ? 'var(--gradient-primary)' : 'transparent',
-                                    border: isActive ? 'none' : '1px solid transparent',
+                                    color: isActive ? 'white' : 'var(--text-secondary)',
+                                    background: isActive ? 'var(--hot)' : 'transparent',
+                                    border: '1px solid transparent',
                                     textDecoration: 'none',
-                                    transition: 'all 0.2s ease',
+                                    transition: 'all 0.15s ease',
+                                    letterSpacing: '0.01em',
                                 }}
                                 onMouseEnter={(e) => {
                                     if (!isActive) {
-                                        e.currentTarget.style.background = 'var(--color-bg-tertiary)';
-                                        e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.3)';
+                                        e.currentTarget.style.background = 'var(--surface-2)';
+                                        e.currentTarget.style.borderColor = 'var(--border)';
                                     }
                                 }}
                                 onMouseLeave={(e) => {
@@ -96,8 +105,7 @@ export default function Navbar() {
                                     }
                                 }}
                             >
-                                <span>{icon}</span>
-                                <span>{label}</span>
+                                {label}
                             </Link>
                         );
                     })}
