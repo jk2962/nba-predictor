@@ -4,12 +4,15 @@
 import { Link } from 'react-router-dom';
 import type { Player, TopPerformer } from '../types';
 
+type StatFilter = 'fantasy' | 'points' | 'rebounds' | 'assists';
+
 interface PlayerCardProps {
     player: Player | TopPerformer;
     showPredictions?: boolean;
+    statFilter?: StatFilter;
 }
 
-export default function PlayerCard({ player, showPredictions = false }: PlayerCardProps) {
+export default function PlayerCard({ player, statFilter = 'fantasy' }: PlayerCardProps) {
     const isTopPerformer = 'predicted_points' in player;
     const playerId = isTopPerformer
         ? (player as TopPerformer).player_id
@@ -25,6 +28,36 @@ export default function PlayerCard({ player, showPredictions = false }: PlayerCa
         if (position.includes('C')) return 'position-C';
         return '';
     };
+
+    // Get the appropriate stat value and label based on the filter
+    const getDisplayStat = (): { value: number; label: string } => {
+        if (!isTopPerformer) {
+            const p = player as Player;
+            switch (statFilter) {
+                case 'points':
+                    return { value: p.season_ppg ?? 0, label: 'PPG' };
+                case 'rebounds':
+                    return { value: p.season_rpg ?? 0, label: 'RPG' };
+                case 'assists':
+                    return { value: p.season_apg ?? 0, label: 'APG' };
+                default:
+                    return { value: 0, label: 'FPT' };
+            }
+        }
+        const p = player as TopPerformer;
+        switch (statFilter) {
+            case 'points':
+                return { value: p.predicted_points, label: 'PTS' };
+            case 'rebounds':
+                return { value: p.predicted_rebounds, label: 'REB' };
+            case 'assists':
+                return { value: p.predicted_assists, label: 'AST' };
+            default:
+                return { value: p.fantasy_score, label: 'FPT' };
+        }
+    };
+
+    const displayStat = getDisplayStat();
 
     return (
         <Link
@@ -85,13 +118,14 @@ export default function PlayerCard({ player, showPredictions = false }: PlayerCa
                 <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
                         display: 'flex',
-                        alignItems: 'center',
+                        alignItems: 'flex-start',
                         gap: 'var(--space-sm)',
                         marginBottom: 'var(--space-xs)',
                     }}>
                         {player.position && (
                             <span
                                 className={`position-badge ${getPositionClass(player.position)}`}
+                                style={{ flexShrink: 0 }}
                             >
                                 {player.position.charAt(0)}
                             </span>
@@ -100,10 +134,8 @@ export default function PlayerCard({ player, showPredictions = false }: PlayerCa
                             fontSize: '1rem',
                             fontWeight: 600,
                             color: 'var(--text-primary)',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
                             letterSpacing: '-0.01em',
+                            lineHeight: 1.3,
                         }}>
                             {playerName}
                         </h3>
@@ -112,101 +144,30 @@ export default function PlayerCard({ player, showPredictions = false }: PlayerCa
                     <p style={{
                         fontSize: '0.8125rem',
                         color: 'var(--text-tertiary)',
-                        marginBottom: 'var(--space-sm)',
                         textTransform: 'uppercase',
                         letterSpacing: '0.02em',
                     }}>
                         {player.team_abbreviation || player.team || 'Free Agent'}
                     </p>
-
-                    {/* Stats */}
-                    <div style={{
-                        display: 'flex',
-                        gap: 'var(--space-sm)',
-                    }}>
-                        {showPredictions && isTopPerformer ? (
-                            <>
-                                <StatBadge
-                                    label="PTS"
-                                    value={(player as TopPerformer).predicted_points}
-                                    isPrediction
-                                />
-                                <StatBadge
-                                    label="REB"
-                                    value={(player as TopPerformer).predicted_rebounds}
-                                    isPrediction
-                                />
-                                <StatBadge
-                                    label="AST"
-                                    value={(player as TopPerformer).predicted_assists}
-                                    isPrediction
-                                />
-                            </>
-                        ) : (
-                            <>
-                                {(player as Player).season_ppg != null && (
-                                    <StatBadge label="PPG" value={(player as Player).season_ppg!} />
-                                )}
-                                {(player as Player).season_rpg != null && (
-                                    <StatBadge label="RPG" value={(player as Player).season_rpg!} />
-                                )}
-                                {(player as Player).season_apg != null && (
-                                    <StatBadge label="APG" value={(player as Player).season_apg!} />
-                                )}
-                            </>
-                        )}
-                    </div>
                 </div>
 
-                {/* Fantasy Score (for top performers) */}
-                {isTopPerformer && (
-                    <div style={{
-                        textAlign: 'right',
-                        minWidth: '64px',
+                {/* Single Large Stat Display */}
+                <div style={{
+                    textAlign: 'right',
+                    minWidth: '64px',
+                }}>
+                    <div className="data-primary" style={{
+                        fontSize: '1.75rem',
+                        color: 'var(--hot)',
+                        marginBottom: 'var(--space-xs)',
                     }}>
-                        <div className="data-primary" style={{
-                            fontSize: '1.75rem',
-                            color: 'var(--hot)',
-                            marginBottom: 'var(--space-xs)',
-                        }}>
-                            {(player as TopPerformer).fantasy_score.toFixed(1)}
-                        </div>
-                        <div className="data-label">
-                            Fantasy
-                        </div>
+                        {displayStat.value.toFixed(1)}
                     </div>
-                )}
+                    <div className="data-label">
+                        {displayStat.label}
+                    </div>
+                </div>
             </div>
         </Link>
-    );
-}
-
-function StatBadge({
-    label,
-    value,
-    isPrediction = false
-}: {
-    label: string;
-    value: number;
-    isPrediction?: boolean;
-}) {
-    return (
-        <div className="stat-badge">
-            <span style={{
-                color: isPrediction ? 'var(--hot)' : 'var(--text-primary)',
-                fontWeight: 700,
-                fontSize: '0.875rem',
-            }}>
-                {value.toFixed(1)}
-            </span>
-            <span style={{
-                color: 'var(--text-tertiary)',
-                fontSize: '0.6875rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.02em',
-            }}>
-                {label}
-            </span>
-        </div>
     );
 }

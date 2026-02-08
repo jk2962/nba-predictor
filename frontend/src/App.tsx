@@ -3,6 +3,7 @@
  */
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import ThemeToggle from './components/ThemeToggle';
 import HomePage from './pages/HomePage';
 import PlayerDetailPage from './pages/PlayerDetailPage';
 import ComparisonPage from './pages/ComparisonPage';
@@ -33,9 +34,13 @@ function App() {
         }}>
           <p style={{ margin: 0 }}>NBA Player Performance Prediction • Powered by XGBoost</p>
         </footer>
+
+        {/* Theme Toggle */}
+        <ThemeToggle />
       </div>
     </Router>
   );
 }
 
 export default App;
+

@@ -178,7 +178,7 @@ export default function HomePage() {
                                     className="animate-fadeIn"
                                     style={{ animationDelay: `${index * 0.05}s` }}
                                 >
-                                    <PlayerCard player={player} showPredictions />
+                                    <PlayerCard player={player} showPredictions statFilter={sortBy} />
                                 </div>
                             ))}
                         </div>
