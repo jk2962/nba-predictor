@@ -136,8 +136,13 @@ async def get_top_performers(
         reb = predictions.get('rebounds', {}).get('predicted', 0)
         ast = predictions.get('assists', {}).get('predicted', 0)
         
-        # Fantasy score formula
-        fantasy_score = pts + 1.2 * reb + 1.5 * ast
+        # Get defensive stats from season averages (not predicted)
+        stl = stats_df['steals'].mean() if 'steals' in stats_df.columns else 0
+        blk = stats_df['blocks'].mean() if 'blocks' in stats_df.columns else 0
+        tov = stats_df['turnovers'].mean() if 'turnovers' in stats_df.columns else 0
+        
+        # Fantasy score formula: PTS + 1.2*REB + 1.5*AST + 3*STL + 3*BLK - 1*TO
+        fantasy_score = pts + 1.2 * reb + 1.5 * ast + 3.0 * stl + 3.0 * blk - 1.0 * tov
         
         performers.append(TopPerformer(
             player_id=player_data['id'],
@@ -305,11 +310,17 @@ async def get_player_predictions(
     reb = predictions.get('rebounds', {})
     ast = predictions.get('assists', {})
     
-    # Calculate fantasy score
+    # Calculate fantasy score including defensive stats
+    stl = stats_df['steals'].mean() if 'steals' in stats_df.columns else 0
+    blk = stats_df['blocks'].mean() if 'blocks' in stats_df.columns else 0
+    tov = stats_df['turnovers'].mean() if 'turnovers' in stats_df.columns else 0
+    
+    # Fantasy score: PTS + 1.2*REB + 1.5*AST + 3*STL + 3*BLK - 1*TO
     fantasy = (
         pts.get('predicted', 0) + 
         1.2 * reb.get('predicted', 0) + 
-        1.5 * ast.get('predicted', 0)
+        1.5 * ast.get('predicted', 0) +
+        3.0 * stl + 3.0 * blk - 1.0 * tov
     )
     
     result = PredictionResult(
@@ -372,10 +383,17 @@ async def get_batch_predictions(
         reb = pred.get('rebounds', {})
         ast = pred.get('assists', {})
         
+        # Get defensive stats from season averages
+        stl = stats_df['steals'].mean() if 'steals' in stats_df.columns else 0
+        blk = stats_df['blocks'].mean() if 'blocks' in stats_df.columns else 0
+        tov = stats_df['turnovers'].mean() if 'turnovers' in stats_df.columns else 0
+        
+        # Fantasy score: PTS + 1.2*REB + 1.5*AST + 3*STL + 3*BLK - 1*TO
         fantasy = (
             pts.get('predicted', 0) + 
             1.2 * reb.get('predicted', 0) + 
-            1.5 * ast.get('predicted', 0)
+            1.5 * ast.get('predicted', 0) +
+            3.0 * stl + 3.0 * blk - 1.0 * tov
         )
         
         predictions.append(PredictionResult(
