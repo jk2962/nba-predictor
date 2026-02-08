@@ -123,6 +123,26 @@ export const playerApi = {
         });
         return data;
     },
+
+    /**
+     * Compare multiple players side-by-side
+     */
+    comparePlayers: async (playerNames: string[]): Promise<any> => {
+        const { data } = await api.post('/api/compare', {
+            players: playerNames,
+        });
+        return data;
+    },
+
+    /**
+     * Search for player names for comparison
+     */
+    searchPlayerNames: async (query: string): Promise<{ query: string; results: string[] }> => {
+        const { data } = await api.get('/api/compare/search', {
+            params: { q: query },
+        });
+        return data;
+    },
 };
 
 /**

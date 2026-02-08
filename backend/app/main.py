@@ -7,7 +7,7 @@ import logging
 
 from app.config import get_settings
 from app.database import init_db
-from app.routers import players_router, metrics_router
+from app.routers import players_router, metrics_router, compare_router
 
 # Configure logging
 logging.basicConfig(
@@ -30,6 +30,7 @@ app = FastAPI(
     - Next game performance predictions with confidence intervals
     - Top performer rankings
     - Batch predictions for draft/comparison tools
+    - **Player comparison tool** - Compare 2-3 players side-by-side
     
     ## Models
     Uses XGBoost regression models trained on historical player data.
@@ -57,6 +58,7 @@ app.add_middleware(
 # Include routers
 app.include_router(players_router)
 app.include_router(metrics_router)
+app.include_router(compare_router)
 
 
 @app.on_event("startup")
