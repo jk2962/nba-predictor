@@ -126,8 +126,8 @@ async def get_top_performers(
         if stats_df.empty or len(stats_df) < 5:
             continue
         
-        # Make prediction
-        predictions = predictor.predict(stats_df)
+        # Make prediction with position for realistic bounds
+        predictions = predictor.predict(stats_df, position=player_data.get('position'))
         
         if not predictions:
             continue
@@ -287,9 +287,10 @@ async def get_player_predictions(
             detail="Insufficient data for prediction"
         )
     
-    # Make prediction
+    # Make prediction with position bounds
     predictions = predictor.predict(
         stats_df,
+        position=player.position,
         game_date=game_date,
         is_home=is_home
     )
@@ -358,7 +359,11 @@ async def get_batch_predictions(
         if stats_df.empty:
             continue
         
-        pred = predictor.predict(stats_df, game_date=request.game_date)
+        pred = predictor.predict(
+            stats_df, 
+            position=player.position,
+            game_date=request.game_date
+        )
         
         if not pred:
             continue
