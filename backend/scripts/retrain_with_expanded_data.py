@@ -24,13 +24,13 @@ logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
 
 
-def load_expanded_data(data_path: str = 'data/full_nba_game_logs.csv') -> pd.DataFrame:
+def load_expanded_data(data_path: str = 'backend/data/full_nba_game_logs.csv') -> pd.DataFrame:
     """Load the expanded dataset."""
     logger.info(f"Loading expanded dataset from {data_path}...")
     
     if not Path(data_path).exists():
         logger.error(f"Dataset not found: {data_path}")
-        logger.error("Run 'python -m scripts.collect_full_nba_dataset' first!")
+        logger.error("Run 'python -m backend.scripts.collect_complete_nba_roster' first!")
         return pd.DataFrame()
     
     df = pd.read_csv(data_path)
@@ -172,7 +172,7 @@ def main():
     logger.info("="*70)
     
     results = {}
-    models_dir = Path('models')
+    models_dir = Path('backend/models')
     models_dir.mkdir(exist_ok=True)
     
     for target, features in feature_sets.items():

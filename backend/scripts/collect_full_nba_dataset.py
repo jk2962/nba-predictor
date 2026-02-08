@@ -161,6 +161,9 @@ class NBADataCollector:
         
         # Get player positions from the stats
         # Note: nba_api doesn't always have positions, so we'll use a simplified approach
+        # Create ID mapping for faster/safer lookup
+        active_player_map = {p['id']: p for p in all_active}
+        
         target_players = []
         
         # Sort by points to get a good mix
@@ -178,18 +181,28 @@ class NBADataCollector:
             tier_players = season_stats[season_stats['ppg_tier'] == tier].head(target_count)
             
             for _, row in tier_players.iterrows():
-                # Find in all_active
-                player_match = [
-                    p for p in all_active 
-                    if p['full_name'] == row['PLAYER_NAME']
-                ]
+                # Match by ID (robust to name spelling differences)
+                player_id = row['PLAYER_ID']
                 
-                if player_match:
-                    player = player_match[0].copy()
+                if player_id in active_player_map:
+                    player = active_player_map[player_id].copy()
                     player['ppg_tier'] = tier
                     player['ppg'] = row['PTS']
                     player['gp'] = row.get('GP', 0)
                     target_players.append(player)
+                else:
+                    # Fallback to name match if ID fails (unlikely)
+                    logger.warning(f"ID {player_id} not found in active players, trying name match...")
+                    player_match = [
+                        p for p in all_active 
+                        if p['full_name'] == row['PLAYER_NAME']
+                    ]
+                    if player_match:
+                        player = player_match[0].copy()
+                        player['ppg_tier'] = tier
+                        player['ppg'] = row['PTS']
+                        player['gp'] = row.get('GP', 0)
+                        target_players.append(player)
         
         logger.info(f"\n✓ Selected {len(target_players)} players")
         
@@ -233,6 +246,10 @@ class NBADataCollector:
                 ).get_data_frames()[0]
                 
                 if len(gamelog) > 0:
+                    # Drop original Player_ID if exists to avoid duplicates
+                    if 'Player_ID' in gamelog.columns:
+                        gamelog = gamelog.drop(columns=['Player_ID'])
+                        
                     gamelog['player_id'] = player_id
                     gamelog['player_name'] = player_name
                     gamelog['season'] = season
@@ -337,6 +354,12 @@ class NBADataCollector:
         
         df = pd.concat(self.all_game_logs, ignore_index=True)
         logger.info(f"Raw games: {len(df):,}")
+        
+        # Drop mixed case Player_ID columns if they exist, keeping our lowercase player_id
+        for col in ['Player_ID', 'PLAYER_ID']:
+            if col in df.columns and 'player_id' in df.columns:
+                logger.info(f"Dropping duplicate column: {col}")
+                df = df.drop(columns=[col])
         
         # Standardize column names
         column_mapping = {

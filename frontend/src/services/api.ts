@@ -146,6 +146,78 @@ export const playerApi = {
 };
 
 /**
+ * Draft Helper API endpoints
+ */
+export const draftApi = {
+    /**
+     * Get full draft rankings with VOR
+     */
+    getDraftRankings: async (leagueSize = 12, showInactive = false): Promise<any> => {
+        const { data } = await api.get('/api/draft/rankings', {
+            params: {
+                league_size: leagueSize,
+                include_inactive: showInactive
+            },
+        });
+        return data;
+    },
+
+    /**
+     * Get draft recommendation
+     */
+    getDraftRecommendation: async (
+        draftedPlayers: string[],
+        myTeam: string[] = [],
+        teamNeeds?: { [position: string]: number }
+    ): Promise<any> => {
+        const { data } = await api.post('/api/draft/recommend', {
+            drafted_players: draftedPlayers,
+            my_team: myTeam,
+            team_needs: teamNeeds,
+        });
+        return data;
+    },
+
+    /**
+     * Get positional scarcity analysis
+     */
+    getScarcity: async (draftedPlayers: string[] = []): Promise<any> => {
+        const { data } = await api.get('/api/draft/scarcity', {
+            params: { drafted: draftedPlayers.join(',') },
+        });
+        return data;
+    },
+
+    /**
+     * Get top N players
+     */
+    getTopPlayers: async (n: number, position?: string): Promise<any> => {
+        const { data } = await api.get(`/api/draft/top/${n}`, {
+            params: position ? { position } : {},
+        });
+        return data;
+    },
+
+    /**
+     * Export rankings as CSV
+     */
+    exportRankings: async (): Promise<void> => {
+        const response = await api.get('/api/draft/export', {
+            responseType: 'blob',
+        });
+
+        // Create download link
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'fantasy_rankings.csv');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    },
+};
+
+/**
  * Metrics API endpoints
  */
 export const metricsApi = {

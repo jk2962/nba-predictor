@@ -1,0 +1,94 @@
+================================================================================
+NBA PLAYER ACTIVITY REPORT
+================================================================================
+
+Generated: 2026-02-08 00:07:11
+
+================================================================================
+DATASET SUMMARY
+================================================================================
+Total players: 523
+Total games: 59,939
+Date range: 2023-10-24 00:00:00 to 2026-02-07 00:00:00
+
+================================================================================
+PLAYER ACTIVITY STATUS
+================================================================================
+ACTIVE                338 ( 64.6%)
+INACTIVE_6M+          171 ( 32.7%)
+RARELY_PLAYS           10 (  1.9%)
+MINIMAL_MINUTES         4 (  0.8%)
+
+================================================================================
+FANTASY BASKETBALL ELIGIBILITY
+================================================================================
+Fantasy-eligible (active): 348
+Exclude from rankings: 175
+
+================================================================================
+PLAYERS TO EXCLUDE FROM FANTASY RANKINGS
+================================================================================
+(Players who haven't played in 6+ months or have insufficient data)
+
+Danny Green                    Games:   2 | Last game:  834d ago | Status: INACTIVE_6M+
+Kaiser Gates                   Games:   1 | Last game:  832d ago | Status: INACTIVE_6M+
+Malcolm Cazalon                Games:   1 | Last game:  826d ago | Status: INACTIVE_6M+
+Markquis Nowell                Games:   1 | Last game:  816d ago | Status: INACTIVE_6M+
+Filip Petrusev                 Games:   2 | Last game:  811d ago | Status: INACTIVE_6M+
+Jordan Ford                    Games:   6 | Last game:  789d ago | Status: INACTIVE_6M+
+D'Moi Hodge                    Games:   7 | Last game:  786d ago | Status: INACTIVE_6M+
+Lindell Wigginton              Games:   2 | Last game:  785d ago | Status: INACTIVE_6M+
+Javonte Smart                  Games:   1 | Last game:  779d ago | Status: INACTIVE_6M+
+Dexter Dennis                  Games:   4 | Last game:  778d ago | Status: INACTIVE_6M+
+Robert Covington               Games:  29 | Last game:  771d ago | Status: INACTIVE_6M+
+Otto Porter Jr.                Games:  15 | Last game:  771d ago | Status: INACTIVE_6M+
+Armoni Brooks                  Games:  10 | Last game:  767d ago | Status: INACTIVE_6M+
+R.J. Hampton                   Games:   8 | Last game:  765d ago | Status: INACTIVE_6M+
+Greg Brown III                 Games:   6 | Last game:  765d ago | Status: INACTIVE_6M+
+Seth Lundy                     Games:   9 | Last game:  746d ago | Status: INACTIVE_6M+
+Ryan Arcidiacono               Games:  19 | Last game:  741d ago | Status: INACTIVE_6M+
+Frank Ntilikina                Games:   5 | Last game:  739d ago | Status: INACTIVE_6M+
+James Bouknight                Games:  14 | Last game:  735d ago | Status: INACTIVE_6M+
+Danuel House Jr.               Games:  34 | Last game:  734d ago | Status: INACTIVE_6M+
+Robin Lopez                    Games:  16 | Last game:  733d ago | Status: INACTIVE_6M+
+Ish Smith                      Games:  43 | Last game:  732d ago | Status: INACTIVE_6M+
+Joe Harris                     Games:  16 | Last game:  732d ago | Status: INACTIVE_6M+
+Furkan Korkmaz                 Games:  35 | Last game:  732d ago | Status: INACTIVE_6M+
+Christian Wood                 Games:  50 | Last game:  725d ago | Status: INACTIVE_6M+
+Kevon Harris                   Games:   2 | Last game:  725d ago | Status: INACTIVE_6M+
+Dereon Seabron                 Games:   6 | Last game:  712d ago | Status: INACTIVE_6M+
+Keyontae Johnson               Games:   9 | Last game:  712d ago | Status: INACTIVE_6M+
+Derrick Rose                   Games:  24 | Last game:  711d ago | Status: INACTIVE_6M+
+Joshua Primo                   Games:   2 | Last game:  709d ago | Status: INACTIVE_6M+
+Yuta Watanabe                  Games:  33 | Last game:  709d ago | Status: INACTIVE_6M+
+Theo Maledon                   Games:  17 | Last game:  708d ago | Status: INACTIVE_6M+
+Charlie Brown Jr.              Games:   8 | Last game:  702d ago | Status: INACTIVE_6M+
+Keita Bates-Diop               Games:  53 | Last game:  687d ago | Status: INACTIVE_6M+
+Dennis Smith Jr.               Games:  56 | Last game:  679d ago | Status: INACTIVE_6M+
+Cedi Osman                     Games:  72 | Last game:  677d ago | Status: INACTIVE_6M+
+Udoka Azubuike                 Games:  16 | Last game:  674d ago | Status: INACTIVE_6M+
+Wesley Matthews                Games:  36 | Last game:  670d ago | Status: INACTIVE_6M+
+Ish Wainright                  Games:  11 | Last game:  670d ago | Status: INACTIVE_6M+
+Dylan Windler                  Games:  17 | Last game:  669d ago | Status: INACTIVE_6M+
+Admiral Schofield              Games:  23 | Last game:  669d ago | Status: INACTIVE_6M+
+Danilo Gallinari               Games:  49 | Last game:  667d ago | Status: INACTIVE_6M+
+Onuralp Bitim                  Games:  23 | Last game:  667d ago | Status: INACTIVE_6M+
+Olivier Sarr                   Games:  15 | Last game:  667d ago | Status: INACTIVE_6M+
+Davis Bertans                  Games:  41 | Last game:  667d ago | Status: INACTIVE_6M+
+Kira Lewis Jr.                 Games:  28 | Last game:  665d ago | Status: INACTIVE_6M+
+Thaddeus Young                 Games:  33 | Last game:  665d ago | Status: INACTIVE_6M+
+Jermaine Samuels Jr.           Games:  13 | Last game:  665d ago | Status: INACTIVE_6M+
+Luka Samanic                   Games:  43 | Last game:  665d ago | Status: INACTIVE_6M+
+Troy Brown Jr.                 Games:  59 | Last game:  665d ago | Status: INACTIVE_6M+
+
+================================================================================
+VERIFICATION: KEY PLAYERS
+================================================================================
+✗ Ace Bailey                NOT FOUND IN DATASET
+✓ LeBron James              Games: 175 | Status: ACTIVE               | Active: YES
+✓ Victor Wembanyama         Games: 155 | Status: ACTIVE               | Active: YES
+✓ John Collins              Games: 156 | Status: ACTIVE               | Active: YES
+✓ Jayson Tatum              Games: 146 | Status: INACTIVE_6M+         | Active: NO
+✓ Stephen Curry             Games: 183 | Status: ACTIVE               | Active: YES
+
+================================================================================
