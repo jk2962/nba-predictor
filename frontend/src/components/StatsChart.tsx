@@ -15,6 +15,7 @@ import {
     ReferenceLine,
 } from 'recharts';
 import type { GameStats, PredictionResult } from '../types';
+import { formatGameDate } from '../utils/dateUtils';
 
 interface StatsChartProps {
     games: GameStats[];
@@ -45,10 +46,7 @@ export default function StatsChart({
 }: StatsChartProps) {
     // Reverse games to show oldest first (left to right)
     const chartData = [...games].reverse().map((game) => ({
-        date: new Date(game.game_date).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-        }),
+        date: formatGameDate(game.game_date, 'medium').replace(/, \d{4}$/, ''),
         opponent: game.opponent_abbreviation || game.opponent_team,
         points: game.points,
         rebounds: game.rebounds,

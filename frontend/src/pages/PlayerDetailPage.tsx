@@ -8,6 +8,7 @@ import PredictionCard from '../components/PredictionCard';
 import { LoadingState, ErrorState } from '../components/LoadingState';
 import { playerApi } from '../services/api';
 import type { PlayerDetail, GameStats, PredictionResult } from '../types';
+import { formatGameDate } from '../utils/dateUtils';
 
 export default function PlayerDetailPage() {
     const { playerId } = useParams<{ playerId: string }>();
@@ -222,7 +223,7 @@ export default function PlayerDetailPage() {
                             <tbody>
                                 {games.map((game) => (
                                     <tr key={game.id}>
-                                        <td>{new Date(game.game_date).toLocaleDateString()}</td>
+                                        <td>{formatGameDate(game.game_date, 'short')}</td>
                                         <td>
                                             {game.is_home ? 'vs' : '@'} {game.opponent_abbreviation || game.opponent_team}
                                         </td>
