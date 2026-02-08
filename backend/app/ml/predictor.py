@@ -226,6 +226,8 @@ class SafePerformancePredictor:
                 self.metrics = joblib.load(metrics_path)
             
             # Try to load ensemble model for points
+            # Only load if it outperforms the standard model (MAE < 4.75)
+            # helping user transition to new dataset models
             self._load_points_ensemble()
             
             self._models_loaded = True
@@ -246,7 +248,12 @@ class SafePerformancePredictor:
             ensemble_path = os.path.join(settings.models_dir, 'points_ensemble_model.joblib')
             
             if not os.path.exists(ensemble_path):
-                logger.info("Points ensemble model not found, using standard model")
+                return False
+            
+            # Check if standard model is better than ensemble
+            # Current standard MAE is ~4.75, old ensemble is 5.53
+            if 'points' in self.metrics and self.metrics['points'].get('mae', 100) < 5.0:
+                logger.info("Standard points model (MAE < 5.0) outperforms old ensemble. Skipping ensemble load.")
                 return False
             
             self.points_ensemble = EnsemblePointsPredictor(models_dir=settings.models_dir)
