@@ -116,6 +116,7 @@ export default function PlayerCard({ player, statFilter = 'fantasy' }: PlayerCar
 
                 {/* Player Info */}
                 <div style={{ flex: 1, minWidth: 0 }}>
+                    {/* Name Row */}
                     <div style={{
                         display: 'flex',
                         alignItems: 'flex-start',
@@ -141,30 +142,47 @@ export default function PlayerCard({ player, statFilter = 'fantasy' }: PlayerCar
                         </h3>
                     </div>
 
-                    <p style={{
-                        fontSize: '0.8125rem',
-                        color: 'var(--text-tertiary)',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.02em',
+                    {/* Team + Stat Row */}
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: 'var(--space-md)',
                     }}>
-                        {player.team_abbreviation || player.team || 'Free Agent'}
-                    </p>
-                </div>
+                        <p style={{
+                            fontSize: '0.8125rem',
+                            color: 'var(--text-tertiary)',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.02em',
+                            margin: 0,
+                        }}>
+                            {player.team_abbreviation || player.team || 'Free Agent'}
+                        </p>
 
-                {/* Single Large Stat Display */}
-                <div style={{
-                    textAlign: 'right',
-                    minWidth: '64px',
-                }}>
-                    <div className="data-primary" style={{
-                        fontSize: '1.75rem',
-                        color: 'var(--hot)',
-                        marginBottom: 'var(--space-xs)',
-                    }}>
-                        {displayStat.value.toFixed(1)}
-                    </div>
-                    <div className="data-label">
-                        {displayStat.label}
+                        {/* Stat Display */}
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'baseline',
+                            gap: 'var(--space-xs)',
+                        }}>
+                            <span style={{
+                                fontSize: '1.5rem',
+                                fontWeight: 700,
+                                color: 'var(--hot)',
+                                fontVariantNumeric: 'tabular-nums',
+                            }}>
+                                {displayStat.value.toFixed(1)}
+                            </span>
+                            <span style={{
+                                fontSize: '0.75rem',
+                                fontWeight: 500,
+                                color: 'var(--text-tertiary)',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.02em',
+                            }}>
+                                {displayStat.label}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
