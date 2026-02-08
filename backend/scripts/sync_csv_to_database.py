@@ -14,11 +14,11 @@ logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
 
 
-def sync_csv_to_database():
-    """Sync the expanded CSV dataset to the SQLite database."""
+def sync_complete_database():
+    """Sync CSV data to database with complete metadata."""
     
-    csv_path = Path('backend/data/full_nba_game_logs.csv')
-    db_path = Path('backend/data/nba.db')
+    csv_path = Path('data/full_nba_game_logs.csv')
+    db_path = Path('data/nba.db')
     
     if not csv_path.exists():
         logger.error(f"CSV not found: {csv_path}")
@@ -147,4 +147,4 @@ def sync_csv_to_database():
 
 
 if __name__ == "__main__":
-    sync_csv_to_database()
+    sync_complete_database()
