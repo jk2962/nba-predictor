@@ -1,0 +1,141 @@
+/**
+ * NBA Player Performance Prediction - API Service
+ */
+import axios from 'axios';
+import type {
+    Player,
+    PlayerDetail,
+    PlayerSearchResult,
+    GameStats,
+    PredictionResult,
+    TopPerformer,
+    PaginatedResponse,
+    BatchPredictionResponse,
+    AllModelMetrics,
+} from '../types';
+
+// Create axios instance
+const api = axios.create({
+    baseURL: import.meta.env.VITE_API_URL || '',
+    timeout: 10000,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+// Request interceptor for logging
+api.interceptors.request.use((config) => {
+    console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`);
+    return config;
+});
+
+// Response interceptor for error handling
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        console.error('[API Error]', error.response?.data || error.message);
+        return Promise.reject(error);
+    }
+);
+
+/**
+ * Player API endpoints
+ */
+export const playerApi = {
+    /**
+     * Get paginated list of players
+     */
+    getPlayers: async (params: {
+        page?: number;
+        per_page?: number;
+        search?: string;
+        position?: string;
+        team?: string;
+    } = {}): Promise<PaginatedResponse<Player>> => {
+        const { data } = await api.get('/api/players', { params });
+        return data;
+    },
+
+    /**
+     * Search players by name
+     */
+    searchPlayers: async (query: string, limit = 10): Promise<PlayerSearchResult[]> => {
+        const { data } = await api.get('/api/players/search', {
+            params: { q: query, limit },
+        });
+        return data;
+    },
+
+    /**
+     * Get player details by ID
+     */
+    getPlayer: async (playerId: number): Promise<PlayerDetail> => {
+        const { data } = await api.get(`/api/players/${playerId}`);
+        return data;
+    },
+
+    /**
+     * Get player's recent games
+     */
+    getPlayerGames: async (playerId: number, limit = 10): Promise<GameStats[]> => {
+        const { data } = await api.get(`/api/players/${playerId}/games`, {
+            params: { limit },
+        });
+        return data;
+    },
+
+    /**
+     * Get player predictions
+     */
+    getPlayerPredictions: async (
+        playerId: number,
+        params: {
+            game_date?: string;
+            is_home?: boolean;
+            opponent?: string;
+        } = {}
+    ): Promise<PredictionResult> => {
+        const { data } = await api.get(`/api/players/${playerId}/predictions`, { params });
+        return data;
+    },
+
+    /**
+     * Get top performers
+     */
+    getTopPerformers: async (params: {
+        limit?: number;
+        stat?: 'points' | 'rebounds' | 'assists' | 'fantasy';
+    } = {}): Promise<TopPerformer[]> => {
+        const { data } = await api.get('/api/players/top-performers', { params });
+        return data;
+    },
+
+    /**
+     * Get batch predictions for multiple players
+     */
+    getBatchPredictions: async (
+        playerIds: number[],
+        gameDate?: string
+    ): Promise<BatchPredictionResponse> => {
+        const { data } = await api.post('/api/players/predictions/batch', {
+            player_ids: playerIds,
+            game_date: gameDate,
+        });
+        return data;
+    },
+};
+
+/**
+ * Metrics API endpoints
+ */
+export const metricsApi = {
+    /**
+     * Get model metrics
+     */
+    getMetrics: async (): Promise<AllModelMetrics> => {
+        const { data } = await api.get('/api/metrics');
+        return data;
+    },
+};
+
+export default api;
