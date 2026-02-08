@@ -60,7 +60,7 @@ graph TB
 docker-compose up --build
 
 # First time: seed the database (in a new terminal)
-docker exec -it untitled-project-backend-1 python -m scripts.seed_data
+docker exec -it nba-predictor-backend-1 python -m scripts.seed_data
 ```
 
 ### Option 2: Manual Setup
