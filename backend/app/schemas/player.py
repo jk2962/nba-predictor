@@ -35,6 +35,8 @@ class PlayerListItem(PlayerBase):
     season_ppg: Optional[float] = Field(None, description="Points per game this season")
     season_rpg: Optional[float] = Field(None, description="Rebounds per game this season")
     season_apg: Optional[float] = Field(None, description="Assists per game this season")
+    season_mpg: Optional[float] = Field(None, description="Minutes per game this season")
+    fantasy_score: Optional[float] = Field(None, description="Calculated fantasy score")
     
     class Config:
         from_attributes = True

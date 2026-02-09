@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const navItems = [
     { path: '/', label: 'Players' },
+    { path: '/browse', label: 'Browse' },
     { path: '/compare', label: 'Compare' },
     { path: '/draft', label: 'Draft' },
 ];

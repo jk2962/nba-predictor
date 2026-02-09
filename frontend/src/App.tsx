@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import PlayerDetailPage from './pages/PlayerDetailPage';
 import ComparisonPage from './pages/ComparisonPage';
 import DraftHelperPage from './pages/DraftHelperPage';
+import BrowsePage from './pages/BrowsePage';
 import './index.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <main style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/browse" element={<BrowsePage />} />
             <Route path="/player/:playerId" element={<PlayerDetailPage />} />
             <Route path="/compare" element={<ComparisonPage />} />
             <Route path="/draft" element={<DraftHelperPage />} />

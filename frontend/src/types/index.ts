@@ -15,6 +15,8 @@ export interface Player {
     season_ppg: number | null;
     season_rpg: number | null;
     season_apg: number | null;
+    season_mpg: number | null;
+    fantasy_score: number | null;
 }
 
 export interface PlayerDetail extends Player {

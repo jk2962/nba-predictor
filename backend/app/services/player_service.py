@@ -1,10 +1,10 @@
 """
 NBA Player Performance Prediction - Player Stats Service
 """
-from typing import Optional, List, Tuple
+from typing import Optional, List, Tuple, Literal
 from datetime import date
 from sqlalchemy.orm import Session
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, asc
 import pandas as pd
 from app.models import Player, Game, PlayerStats, Prediction
 from app.schemas import PlayerListItem, PlayerDetail, GameStats, PredictionResult
@@ -21,13 +21,27 @@ class PlayerService:
         search: Optional[str] = None,
         position: Optional[str] = None,
         team: Optional[str] = None,
-        active_only: bool = True
-    ) -> Tuple[List[Player], int]:
+        active_only: bool = True,
+        # Stat range filters
+        ppg_min: Optional[float] = None,
+        ppg_max: Optional[float] = None,
+        rpg_min: Optional[float] = None,
+        rpg_max: Optional[float] = None,
+        apg_min: Optional[float] = None,
+        apg_max: Optional[float] = None,
+        mpg_min: Optional[float] = None,
+        mpg_max: Optional[float] = None,
+        # Sorting
+        sort_by: Literal['name', 'ppg', 'rpg', 'apg', 'mpg', 'fantasy'] = 'name',
+        sort_order: Literal['asc', 'desc'] = 'asc',
+    ) -> Tuple[List[dict], int]:
         """
-        Get paginated list of players with optional filters.
+        Get paginated list of players with optional filters and sorting.
+        
+        Now returns dict with stats included, not just Player objects.
         
         Returns:
-            Tuple of (players list, total count)
+            Tuple of (players list with stats, total count)
         """
         query = db.query(Player)
         
@@ -35,21 +49,106 @@ class PlayerService:
             query = query.filter(Player.is_active == True)
         
         if search:
-            query = query.filter(Player.name.ilike(f"%{search}%"))
-        
-        if position:
-            query = query.filter(Player.position.ilike(f"%{position}%"))
-        
-        if team:
+            search_term = f"%{search}%"
             query = query.filter(
-                (Player.team.ilike(f"%{team}%")) | 
-                (Player.team_abbreviation.ilike(f"%{team}%"))
+                (Player.name.ilike(search_term)) |
+                (Player.team.ilike(search_term)) |
+                (Player.team_abbreviation.ilike(search_term))
             )
         
-        total = query.count()
-        players = query.order_by(Player.name).offset(skip).limit(limit).all()
+        if position:
+            # Support multiple positions (comma-separated)
+            positions = [p.strip().upper() for p in position.split(',')]
+            position_filters = []
+            for pos in positions:
+                position_filters.append(Player.position.ilike(f"%{pos}%"))
+            if position_filters:
+                from sqlalchemy import or_
+                query = query.filter(or_(*position_filters))
         
-        return players, total
+        if team:
+            # Support multiple teams (comma-separated)
+            teams = [t.strip().upper() for t in team.split(',')]
+            team_filters = []
+            for t in teams:
+                team_filters.append(Player.team_abbreviation.ilike(t))
+            if team_filters:
+                from sqlalchemy import or_
+                query = query.filter(or_(*team_filters))
+        
+        # Get all matching players first
+        all_players = query.all()
+        
+        # Calculate stats for each player and apply stat filters
+        players_with_stats = []
+        for player in all_players:
+            stats = PlayerService.get_player_season_stats(db, player.id)
+            
+            if not stats.get('games_played', 0):
+                continue
+            
+            ppg = stats.get('ppg', 0) or 0
+            rpg = stats.get('rpg', 0) or 0
+            apg = stats.get('apg', 0) or 0
+            mpg = stats.get('mpg', 0) or 0
+            spg = stats.get('spg', 0) or 0
+            bpg = stats.get('bpg', 0) or 0
+            
+            # Apply stat filters
+            if ppg_min is not None and ppg < ppg_min:
+                continue
+            if ppg_max is not None and ppg > ppg_max:
+                continue
+            if rpg_min is not None and rpg < rpg_min:
+                continue
+            if rpg_max is not None and rpg > rpg_max:
+                continue
+            if apg_min is not None and apg < apg_min:
+                continue
+            if apg_max is not None and apg > apg_max:
+                continue
+            if mpg_min is not None and mpg < mpg_min:
+                continue
+            if mpg_max is not None and mpg > mpg_max:
+                continue
+            
+            # Calculate fantasy score: PTS + 1.2*REB + 1.5*AST + 3*STL + 3*BLK
+            fantasy = ppg + 1.2 * rpg + 1.5 * apg + 3.0 * spg + 3.0 * bpg
+            
+            players_with_stats.append({
+                'player': player,
+                'ppg': ppg,
+                'rpg': rpg,
+                'apg': apg,
+                'mpg': mpg,
+                'spg': spg,
+                'bpg': bpg,
+                'fantasy': round(fantasy, 1),
+                'games_played': stats.get('games_played', 0),
+                'fg_pct': stats.get('fg_pct', 0),
+                'fg3_pct': stats.get('fg3_pct', 0),
+                'ft_pct': stats.get('ft_pct', 0),
+            })
+        
+        # Sort
+        sort_key = sort_by if sort_by in ['ppg', 'rpg', 'apg', 'mpg', 'fantasy'] else 'player'
+        if sort_key == 'player':
+            players_with_stats.sort(
+                key=lambda x: x['player'].name.lower(),
+                reverse=(sort_order == 'desc')
+            )
+        else:
+            players_with_stats.sort(
+                key=lambda x: x[sort_key],
+                reverse=(sort_order == 'desc')
+            )
+        
+        total = len(players_with_stats)
+        
+        # Apply pagination
+        paginated = players_with_stats[skip:skip + limit]
+        
+        return paginated, total
     
     @staticmethod
     def get_player_by_id(db: Session, player_id: int) -> Optional[Player]:
@@ -204,3 +303,18 @@ class PlayerService:
                 })
         
         return result
+    
+    @staticmethod
+    def get_all_teams(db: Session) -> List[dict]:
+        """Get list of all unique teams."""
+        teams = (
+            db.query(Player.team, Player.team_abbreviation)
+            .filter(Player.is_active == True)
+            .distinct()
+            .all()
+        )
+        return [
+            {'name': t[0], 'abbreviation': t[1]} 
+            for t in teams if t[0] and t[1]
+        ]
+

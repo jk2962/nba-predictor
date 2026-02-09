@@ -26,26 +26,53 @@ router = APIRouter(prefix="/api/players", tags=["players"])
 async def list_players(
     page: int = Query(1, ge=1, description="Page number"),
     per_page: int = Query(20, ge=1, le=100, description="Items per page"),
-    search: Optional[str] = Query(None, description="Search by player name"),
-    position: Optional[str] = Query(None, description="Filter by position (G, F, C)"),
-    team: Optional[str] = Query(None, description="Filter by team"),
+    search: Optional[str] = Query(None, description="Search by player name, team"),
+    position: Optional[str] = Query(None, description="Filter by position (comma-separated: PG,SG,SF,PF,C)"),
+    team: Optional[str] = Query(None, description="Filter by team abbreviation (comma-separated: LAL,GSW)"),
+    # Stat range filters
+    ppg_min: Optional[float] = Query(None, ge=0, description="Minimum PPG"),
+    ppg_max: Optional[float] = Query(None, ge=0, description="Maximum PPG"),
+    rpg_min: Optional[float] = Query(None, ge=0, description="Minimum RPG"),
+    rpg_max: Optional[float] = Query(None, ge=0, description="Maximum RPG"),
+    apg_min: Optional[float] = Query(None, ge=0, description="Minimum APG"),
+    apg_max: Optional[float] = Query(None, ge=0, description="Maximum APG"),
+    mpg_min: Optional[float] = Query(None, ge=0, description="Minimum MPG"),
+    mpg_max: Optional[float] = Query(None, ge=0, description="Maximum MPG"),
+    # Sorting
+    sort_by: str = Query("fantasy", description="Sort by: name, ppg, rpg, apg, mpg, fantasy"),
+    sort_order: str = Query("desc", description="Sort order: asc, desc"),
     db: Session = Depends(get_db)
 ):
     """
-    Get a paginated list of active NBA players.
+    Get a paginated list of active NBA players with advanced filtering.
     
-    Supports filtering by name, position, and team.
+    Supports filtering by name, position, team, and stat ranges.
+    Results include calculated fantasy score.
     """
     skip = (page - 1) * per_page
-    players, total = PlayerService.get_players(
-        db, skip=skip, limit=per_page, 
-        search=search, position=position, team=team
+    players_data, total = PlayerService.get_players(
+        db, 
+        skip=skip, 
+        limit=per_page, 
+        search=search, 
+        position=position, 
+        team=team,
+        ppg_min=ppg_min,
+        ppg_max=ppg_max,
+        rpg_min=rpg_min,
+        rpg_max=rpg_max,
+        apg_min=apg_min,
+        apg_max=apg_max,
+        mpg_min=mpg_min,
+        mpg_max=mpg_max,
+        sort_by=sort_by,
+        sort_order=sort_order,
     )
     
-    # Get season stats for each player
+    # Build response items (stats are already included)
     items = []
-    for player in players:
-        stats = PlayerService.get_player_season_stats(db, player.id)
+    for data in players_data:
+        player = data['player']
         items.append(PlayerListItem(
             id=player.id,
             nba_id=player.nba_id,
@@ -55,12 +82,14 @@ async def list_players(
             position=player.position,
             headshot_url=player.headshot_url,
             is_active=player.is_active,
-            season_ppg=stats.get('ppg'),
-            season_rpg=stats.get('rpg'),
-            season_apg=stats.get('apg'),
+            season_ppg=data['ppg'],
+            season_rpg=data['rpg'],
+            season_apg=data['apg'],
+            season_mpg=data.get('mpg'),
+            fantasy_score=data.get('fantasy'),
         ))
     
-    pages = (total + per_page - 1) // per_page
+    pages = (total + per_page - 1) // per_page if per_page > 0 else 0
     
     return PaginatedResponse(
         items=items,
@@ -82,20 +111,30 @@ async def search_players(
     
     Returns simplified results for autocomplete.
     """
-    players, _ = PlayerService.get_players(db, limit=limit, search=q)
+    players_data, _ = PlayerService.get_players(db, limit=limit, search=q)
     
     return [
         PlayerSearchResult(
-            id=p.id,
-            nba_id=p.nba_id,
-            name=p.name,
-            team=p.team,
-            team_abbreviation=p.team_abbreviation,
-            position=p.position,
-            headshot_url=p.headshot_url,
+            id=data['player'].id,
+            nba_id=data['player'].nba_id,
+            name=data['player'].name,
+            team=data['player'].team,
+            team_abbreviation=data['player'].team_abbreviation,
+            position=data['player'].position,
+            headshot_url=data['player'].headshot_url,
         )
-        for p in players
+        for data in players_data
     ]
+
+
+@router.get("/teams", response_model=List[dict])
+async def get_teams(db: Session = Depends(get_db)):
+    """
+    Get list of all NBA teams.
+    
+    Returns team names and abbreviations for filter dropdowns.
+    """
+    return PlayerService.get_all_teams(db)
 
 
 @router.get("/top-performers", response_model=List[TopPerformer])

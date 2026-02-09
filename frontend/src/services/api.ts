@@ -43,7 +43,7 @@ api.interceptors.response.use(
  */
 export const playerApi = {
     /**
-     * Get paginated list of players
+     * Get paginated list of players with advanced filtering
      */
     getPlayers: async (params: {
         page?: number;
@@ -51,8 +51,26 @@ export const playerApi = {
         search?: string;
         position?: string;
         team?: string;
+        ppg_min?: number;
+        ppg_max?: number;
+        rpg_min?: number;
+        rpg_max?: number;
+        apg_min?: number;
+        apg_max?: number;
+        mpg_min?: number;
+        mpg_max?: number;
+        sort_by?: 'name' | 'ppg' | 'rpg' | 'apg' | 'mpg' | 'fantasy';
+        sort_order?: 'asc' | 'desc';
     } = {}): Promise<PaginatedResponse<Player>> => {
         const { data } = await api.get('/api/players', { params });
+        return data;
+    },
+
+    /**
+     * Get list of all NBA teams
+     */
+    getTeams: async (): Promise<{ name: string; abbreviation: string }[]> => {
+        const { data } = await api.get('/api/players/teams');
         return data;
     },
 
