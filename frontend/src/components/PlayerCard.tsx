@@ -41,7 +41,7 @@ export default function PlayerCard({ player, statFilter = 'fantasy' }: PlayerCar
                 case 'assists':
                     return { value: p.season_apg ?? 0, label: 'APG' };
                 default:
-                    return { value: 0, label: 'FPT' };
+                    return { value: (p.fantasy_score ?? 0), label: 'FPT' };
             }
         }
         const p = player as TopPerformer;

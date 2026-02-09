@@ -61,7 +61,7 @@ class PlayerService:
             positions = [p.strip().upper() for p in position.split(',')]
             position_filters = []
             for pos in positions:
-                position_filters.append(Player.position.ilike(f"%{pos}%"))
+                position_filters.append(Player.position.ilike(f"{pos}%"))
             if position_filters:
                 from sqlalchemy import or_
                 query = query.filter(or_(*position_filters))
@@ -93,6 +93,7 @@ class PlayerService:
             mpg = stats.get('mpg', 0) or 0
             spg = stats.get('spg', 0) or 0
             bpg = stats.get('bpg', 0) or 0
+            topg = stats.get('topg', 0) or 0
             
             # Apply stat filters
             if ppg_min is not None and ppg < ppg_min:
@@ -112,8 +113,8 @@ class PlayerService:
             if mpg_max is not None and mpg > mpg_max:
                 continue
             
-            # Calculate fantasy score: PTS + 1.2*REB + 1.5*AST + 3*STL + 3*BLK
-            fantasy = ppg + 1.2 * rpg + 1.5 * apg + 3.0 * spg + 3.0 * bpg
+            # Calculate fantasy score: PTS + 1.2*REB + 1.5*AST + 3*STL + 3*BLK - 1*TOV
+            fantasy = ppg + 1.2 * rpg + 1.5 * apg + 3.0 * spg + 3.0 * bpg - 1.0 * topg
             
             players_with_stats.append({
                 'player': player,
@@ -179,6 +180,7 @@ class PlayerService:
             func.avg(PlayerStats.assists).label('apg'),
             func.avg(PlayerStats.steals).label('spg'),
             func.avg(PlayerStats.blocks).label('bpg'),
+            func.avg(PlayerStats.turnovers).label('topg'),
             func.avg(PlayerStats.minutes).label('mpg'),
             func.avg(PlayerStats.fg_pct).label('fg_pct'),
             func.avg(PlayerStats.fg3_pct).label('fg3_pct'),
@@ -200,6 +202,7 @@ class PlayerService:
             'apg': round(result.apg, 1) if result.apg else 0,
             'spg': round(result.spg, 1) if result.spg else 0,
             'bpg': round(result.bpg, 1) if result.bpg else 0,
+            'topg': round(result.topg, 1) if result.topg else 0,
             'mpg': round(result.mpg, 1) if result.mpg else 0,
             'fg_pct': round(result.fg_pct * 100, 1) if result.fg_pct else 0,
             'fg3_pct': round(result.fg3_pct * 100, 1) if result.fg3_pct else 0,

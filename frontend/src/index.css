@@ -55,38 +55,7 @@
   --radius-lg: 0.75rem;
 }
 
-/* Light Mode Theme */
-[data-theme="light"] {
-  /* Base - Clean white */
-  --base: #f8fafc;
 
-  /* Surfaces - Light grays with subtle depth */
-  --surface-1: #ffffff;
-  --surface-2: #f1f5f9;
-  --surface-3: #e2e8f0;
-
-  /* Borders - Dark opacity progression */
-  --border-subtle: rgba(0, 0, 0, 0.06);
-  --border: rgba(0, 0, 0, 0.1);
-  --border-emphasis: rgba(0, 0, 0, 0.15);
-  --border-focus: rgba(249, 115, 22, 0.5);
-
-  /* Text - Dark hierarchy */
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-tertiary: #64748b;
-  --text-muted: #94a3b8;
-
-  /* Data colors - Slightly adjusted for light background */
-  --hot: #ea580c;
-  --hot-dim: #c2410c;
-  --cold: #2563eb;
-  --cold-dim: #1d4ed8;
-
-  /* Interactive states */
-  --hover-overlay: rgba(0, 0, 0, 0.04);
-  --active-overlay: rgba(0, 0, 0, 0.06);
-}
 
 /* Reset and base styles */
 * {
