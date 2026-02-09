@@ -82,7 +82,7 @@ export default function HomePage() {
                     margin: '0 auto var(--space-xl)',
                     lineHeight: 1.5,
                 }}>
-                    AI-powered predictions for fantasy basketball. Search players, view stats,
+                    ML-powered predictions for fantasy basketball. Search players, view stats,
                     and get next-game performance forecasts.
                 </p>
 
