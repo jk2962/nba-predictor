@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: nba-predictor-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+      - key: DATABASE_URL
+        value: sqlite:///./data/nba.db
+    healthCheckPath: /

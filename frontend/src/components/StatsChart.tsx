@@ -25,13 +25,6 @@ interface StatsChartProps {
     height?: number;
 }
 
-// Use neutral colors that work with both themes
-const STAT_COLORS = {
-    points: 'var(--text-primary)',
-    rebounds: 'var(--text-secondary)',
-    assists: 'var(--text-tertiary)',
-};
-
 // Fallback hex colors for recharts (it doesn't parse CSS vars well for some props)
 const STAT_COLORS_HEX = {
     points: '#6366f1',

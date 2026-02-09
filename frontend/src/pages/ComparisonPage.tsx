@@ -90,7 +90,6 @@ export default function ComparisonPage() {
                 <EmptyState
                     title="No players selected"
                     description="Search and add 2-3 players to compare their predictions and stats."
-                    icon="⚖️"
                 />
             )}
 

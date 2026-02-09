@@ -1,8 +1,8 @@
 /**
  * Player Browser Component - Advanced filtering, sorting, and display
  */
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { playerApi } from '../services/api';
 import type { Player } from '../types';
 import PlayerCard from './PlayerCard';

@@ -164,7 +164,7 @@ export default function PredictionCard({
 function PredictionStat({
     label,
     value,
-    lower95,
+    lower95: _lower95,
     upper95,
     showConfidence,
     selectedCI,
