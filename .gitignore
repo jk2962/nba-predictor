@@ -1,2 +1,46 @@
+# Vercel
 .vercel
+
+# Environment variables
+.env
 .env*.local
+.env.production
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+backend/venv/
+
+# Node
+node_modules/
+frontend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test & Dev artifacts
+reports/
+*.log
+test_*.csv
+restart-servers.sh
+
+# Build outputs
+backend/data/*.db-journal
