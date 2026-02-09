@@ -42,18 +42,11 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# Configure CORS
+# Configure CORS - Allow all origins since this is a public API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173",
-        "https://nba-predictor-iota.vercel.app",
-        "https://nba-predictor-*.vercel.app",  # Allow preview deployments
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],  # Allow all origins for public API
+    allow_credentials=False,  # Must be False when using allow_origins=["*"]
     allow_methods=["*"],
     allow_headers=["*"],
 )
