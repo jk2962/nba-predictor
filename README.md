@@ -302,64 +302,84 @@ https://nba-predictor-t1f2.onrender.com
 
 ```
 nba-predictor/
-├── backend/
+├── .env.example                # Environment variable template
+├── .env.vercel.example         # Vercel-specific env template
+├── .gitignore                  # Git ignore patterns
+├── .vercelignore               # Vercel deployment ignore patterns
+├── README.md                   # This file
+├── VERCEL_DEPLOYMENT.md        # Deployment guide
+├── docker-compose.yml          # Docker setup for local development
+├── render.yaml                 # Render deployment configuration
+├── vercel.json                 # Vercel deployment configuration
+│
+├── backend/                    # Python FastAPI Backend
+│   ├── .python-version         # Python version specification
+│   ├── runtime.txt            # Render Python runtime
+│   ├── requirements.txt       # Python dependencies
+│   ├── Dockerfile             # Docker configuration
 │   ├── app/
-│   │   ├── main.py              # FastAPI application entry
-│   │   ├── config.py            # Configuration & environment
-│   │   ├── database.py          # SQLAlchemy setup
-│   │   ├── models/              # Database ORM models
+│   │   ├── main.py            # FastAPI application entry
+│   │   ├── config.py          # Configuration & settings
+│   │   ├── database.py        # SQLAlchemy database setup
+│   │   ├── models/            # SQLAlchemy ORM models
 │   │   │   └── player.py
-│   │   ├── schemas/             # Pydantic request/response schemas
+│   │   ├── schemas/           # Pydantic request/response schemas
 │   │   │   ├── player.py
 │   │   │   └── prediction.py
-│   │   ├── routers/             # API route handlers
-│   │   │   ├── players.py
-│   │   │   ├── compare.py
-│   │   │   ├── draft.py
-│   │   │   └── metrics.py
-│   │   ├── services/            # Business logic layer
+│   │   ├── routers/           # FastAPI route handlers
+│   │   │   ├── players.py     # Player endpoints
+│   │   │   ├── compare.py     # Player comparison
+│   │   │   ├── draft.py       # Fantasy draft helper
+│   │   │   └── metrics.py     # Model metrics
+│   │   ├── services/          # Business logic layer
 │   │   │   └── player_service.py
-│   │   └── ml/                  # Machine learning module
-│   │       ├── predictor.py     # XGBoost prediction engine
+│   │   └── ml/                # Machine learning module
+│   │       ├── predictor.py   # XGBoost prediction engine
 │   │       └── feature_engineering.py
 │   ├── scripts/
-│   │   └── seed_data.py         # Data collection & model training
+│   │   └── seed_data.py       # Data collection & model training
 │   ├── data/
-│   │   └── nba.db              # SQLite database (11MB)
-│   ├── models/                  # Trained ML models
-│   │   ├── points_model.joblib
-│   │   ├── rebounds_model.joblib
-│   │   ├── assists_model.joblib
-│   │   └── metrics.joblib
-│   ├── requirements.txt
-│   └── Dockerfile
-├── frontend/
-│   ├── src/
-│   │   ├── components/          # Reusable React components
-│   │   │   ├── Navbar.tsx
-│   │   │   ├── PlayerCard.tsx
-│   │   │   ├── PredictionCard.tsx
-│   │   │   ├── StatsChart.tsx
-│   │   │   └── SearchBar.tsx
-│   │   ├── pages/               # Route pages
-│   │   │   ├── HomePage.tsx
-│   │   │   ├── BrowsePage.tsx
-│   │   │   ├── PlayerDetailPage.tsx
-│   │   │   ├── ComparisonPage.tsx
-│   │   │   └── DraftHelperPage.tsx
-│   │   ├── services/
-│   │   │   └── api.ts          # Axios API client
-│   │   ├── types/
-│   │   │   └── index.ts        # TypeScript interfaces
-│   │   ├── App.tsx             # Main app component
-│   │   └── main.tsx            # Entry point
-│   ├── package.json
-│   └── vite.config.ts
-├── vercel.json                 # Vercel deployment config
-├── render.yaml                 # Render deployment config
-├── docker-compose.yml
-└── README.md
+│   │   ├── nba.db            # SQLite database (11MB, gitignored)
+│   │   └── *.csv             # Player data (gitignored)
+│   └── models/                # Trained ML models (gitignored)
+│       ├── points_model.joblib
+│       ├── rebounds_model.joblib
+│       ├── assists_model.joblib
+│       └── metrics.joblib
+│
+└── frontend/                   # React + TypeScript Frontend
+    ├── package.json           # Node dependencies
+    ├── package-lock.json      # Dependency lock file
+    ├── vite.config.ts        # Vite build configuration
+    ├── tsconfig.json         # TypeScript configuration
+    ├── index.html            # HTML entry point
+    ├── Dockerfile            # Docker configuration
+    └── src/
+        ├── main.tsx          # React entry point
+        ├── App.tsx           # Main app component with routing
+        ├── index.css         # Global styles
+        ├── components/        # Reusable React components
+        │   ├── Navbar.tsx
+        │   ├── PlayerCard.tsx
+        │   ├── PredictionCard.tsx
+        │   ├── StatsChart.tsx
+        │   ├── SearchBar.tsx
+        │   ├── PlayerBrowser.tsx
+        │   ├── LoadingState.tsx
+        │   └── ThemeToggle.tsx
+        ├── pages/             # Route pages
+        │   ├── HomePage.tsx
+        │   ├── BrowsePage.tsx
+        │   ├── PlayerDetailPage.tsx
+        │   ├── ComparisonPage.tsx
+        │   └── DraftHelperPage.tsx
+        ├── services/
+        │   └── api.ts        # Axios API client
+        └── types/
+            └── index.ts      # TypeScript type definitions
 ```
+
+> **Note:** This is a production-ready structure. Development artifacts, test files, and build caches are excluded via `.gitignore`.
 
 ---
 
