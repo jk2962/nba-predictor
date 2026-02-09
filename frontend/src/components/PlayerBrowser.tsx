@@ -431,7 +431,7 @@ export default function PlayerBrowser() {
                 {loading && (
                     <div style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+                        gridTemplateColumns: 'repeat(3, 1fr)',
                         gap: '1.5rem',
                     }}>
                         {Array.from({ length: 12 }).map((_, i) => (
@@ -452,7 +452,7 @@ export default function PlayerBrowser() {
                 {!loading && !error && viewMode === 'grid' && (
                     <div style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+                        gridTemplateColumns: 'repeat(3, 1fr)',
                         gap: '1.5rem',
                     }}>
                         {players.map(player => (
