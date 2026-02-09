@@ -25,7 +25,15 @@ interface StatsChartProps {
     height?: number;
 }
 
+// Use neutral colors that work with both themes
 const STAT_COLORS = {
+    points: 'var(--text-primary)',
+    rebounds: 'var(--text-secondary)',
+    assists: 'var(--text-tertiary)',
+};
+
+// Fallback hex colors for recharts (it doesn't parse CSS vars well for some props)
+const STAT_COLORS_HEX = {
     points: '#6366f1',
     rebounds: '#22c55e',
     assists: '#f97316',
@@ -66,6 +74,21 @@ export default function StatsChart({
         });
     }
 
+    // Get theme-aware text color
+    const getTextColor = () => {
+        if (typeof document !== 'undefined') {
+            const theme = document.documentElement.getAttribute('data-theme');
+            return theme === 'light' ? '#1f2937' : '#f9fafb';
+        }
+        return '#f9fafb';
+    };
+
+    const textColor = getTextColor();
+    const gridColor = typeof document !== 'undefined' &&
+        document.documentElement.getAttribute('data-theme') === 'light'
+        ? 'rgba(0,0,0,0.1)'
+        : 'rgba(255,255,255,0.1)';
+
     const CustomTooltip = ({ active, payload, label }: any) => {
         if (!active || !payload || !payload.length) return null;
 
@@ -77,16 +100,16 @@ export default function StatsChart({
                 className="card"
                 style={{
                     padding: '0.75rem 1rem',
-                    background: 'var(--color-bg-secondary)',
+                    background: 'var(--surface-2)',
                     border: isPrediction
-                        ? '1px solid var(--color-nba-orange)'
-                        : '1px solid rgba(255,255,255,0.1)',
+                        ? '1px solid var(--hot)'
+                        : '1px solid var(--border)',
                 }}
             >
                 <div style={{
                     fontWeight: 600,
                     marginBottom: '0.5rem',
-                    color: isPrediction ? 'var(--color-nba-orange)' : 'var(--color-text-primary)',
+                    color: isPrediction ? 'var(--hot)' : 'var(--text-primary)',
                 }}>
                     {isPrediction ? '🔮 Prediction' : `vs ${data?.opponent}`}
                     {data?.isHome && ' (Home)'}
@@ -99,7 +122,7 @@ export default function StatsChart({
                             justifyContent: 'space-between',
                             gap: '1rem',
                             fontSize: '0.875rem',
-                            color: entry.color,
+                            color: 'var(--text-primary)',
                         }}
                     >
                         <span>{STAT_LABELS[entry.dataKey as keyof typeof STAT_LABELS]}:</span>
@@ -121,17 +144,17 @@ export default function StatsChart({
                 >
                     <CartesianGrid
                         strokeDasharray="3 3"
-                        stroke="rgba(255,255,255,0.1)"
+                        stroke={gridColor}
                         vertical={false}
                     />
                     <XAxis
                         dataKey="date"
-                        tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }}
-                        axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
+                        tick={{ fill: textColor, fontSize: 12 }}
+                        axisLine={{ stroke: gridColor }}
                         tickLine={false}
                     />
                     <YAxis
-                        tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }}
+                        tick={{ fill: textColor, fontSize: 12 }}
                         axisLine={false}
                         tickLine={false}
                     />
@@ -141,7 +164,7 @@ export default function StatsChart({
                             paddingTop: '1rem',
                         }}
                         formatter={(value: string) => (
-                            <span style={{ color: 'var(--color-text-secondary)' }}>
+                            <span style={{ color: textColor }}>
                                 {STAT_LABELS[value as keyof typeof STAT_LABELS]}
                             </span>
                         )}
@@ -150,37 +173,37 @@ export default function StatsChart({
                     {prediction && (
                         <ReferenceLine
                             x="Next"
-                            stroke="var(--color-nba-orange)"
+                            stroke="var(--hot)"
                             strokeDasharray="5 5"
                             strokeWidth={2}
                         />
                     )}
 
-                    {stats.map((stat) =>
+                    {stats.map((stat, index) =>
                         type === 'bar' ? (
                             <Bar
                                 key={stat}
                                 dataKey={stat}
-                                fill={STAT_COLORS[stat]}
+                                fill={STAT_COLORS_HEX[stat]}
                                 radius={[4, 4, 0, 0]}
-                                opacity={0.8}
+                                opacity={1 - index * 0.2}
                             />
                         ) : (
                             <Line
                                 key={stat}
                                 type="monotone"
                                 dataKey={stat}
-                                stroke={STAT_COLORS[stat]}
+                                stroke={STAT_COLORS_HEX[stat]}
                                 strokeWidth={2}
                                 dot={{
                                     r: 4,
-                                    fill: 'var(--color-bg-primary)',
-                                    stroke: STAT_COLORS[stat],
+                                    fill: 'var(--surface-0)',
+                                    stroke: STAT_COLORS_HEX[stat],
                                     strokeWidth: 2,
                                 }}
                                 activeDot={{
                                     r: 6,
-                                    fill: STAT_COLORS[stat],
+                                    fill: STAT_COLORS_HEX[stat],
                                 }}
                             />
                         )
@@ -209,6 +232,21 @@ export function ComparisonChart({
         fantasy: pred.fantasy_score,
     }));
 
+    // Get theme-aware text color
+    const getTextColor = () => {
+        if (typeof document !== 'undefined') {
+            const theme = document.documentElement.getAttribute('data-theme');
+            return theme === 'light' ? '#1f2937' : '#f9fafb';
+        }
+        return '#f9fafb';
+    };
+
+    const textColor = getTextColor();
+    const gridColor = typeof document !== 'undefined' &&
+        document.documentElement.getAttribute('data-theme') === 'light'
+        ? 'rgba(0,0,0,0.1)'
+        : 'rgba(255,255,255,0.1)';
+
     return (
         <div style={{ width: '100%', height }}>
             <ResponsiveContainer>
@@ -218,29 +256,34 @@ export function ComparisonChart({
                 >
                     <CartesianGrid
                         strokeDasharray="3 3"
-                        stroke="rgba(255,255,255,0.1)"
+                        stroke={gridColor}
                         vertical={false}
                     />
                     <XAxis
                         dataKey="name"
-                        tick={{ fill: 'var(--color-text-primary)', fontSize: 12 }}
-                        axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
+                        tick={{ fill: textColor, fontSize: 12 }}
+                        axisLine={{ stroke: gridColor }}
                         tickLine={false}
                     />
                     <YAxis
-                        tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }}
+                        tick={{ fill: textColor, fontSize: 12 }}
                         axisLine={false}
                         tickLine={false}
                     />
                     <Tooltip
                         contentStyle={{
-                            background: 'var(--color-bg-secondary)',
-                            border: '1px solid rgba(255,255,255,0.1)',
+                            background: 'var(--surface-2)',
+                            border: '1px solid var(--border)',
                             borderRadius: '0.5rem',
+                            color: textColor,
                         }}
-                        labelStyle={{ color: 'var(--color-text-primary)' }}
+                        labelStyle={{ color: textColor }}
                     />
-                    <Legend />
+                    <Legend
+                        formatter={(value: string) => (
+                            <span style={{ color: textColor }}>{value}</span>
+                        )}
+                    />
                     <Bar dataKey="points" name="Points" fill="#6366f1" radius={[4, 4, 0, 0]} />
                     <Bar dataKey="rebounds" name="Rebounds" fill="#22c55e" radius={[4, 4, 0, 0]} />
                     <Bar dataKey="assists" name="Assists" fill="#f97316" radius={[4, 4, 0, 0]} />
@@ -249,3 +292,4 @@ export function ComparisonChart({
         </div>
     );
 }
+

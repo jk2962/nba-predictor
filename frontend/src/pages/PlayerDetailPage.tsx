@@ -139,9 +139,9 @@ export default function PlayerDetailPage() {
                         gap: '1.5rem',
                         flexWrap: 'wrap',
                     }}>
-                        <StatDisplay label="PPG" value={player.season_ppg} color="#6366f1" />
-                        <StatDisplay label="RPG" value={player.season_rpg} color="#22c55e" />
-                        <StatDisplay label="APG" value={player.season_apg} color="#f97316" />
+                        <StatDisplay label="PPG" value={player.season_ppg} />
+                        <StatDisplay label="RPG" value={player.season_rpg} />
+                        <StatDisplay label="APG" value={player.season_apg} />
                         <StatDisplay label="FG%" value={player.season_fg_pct} suffix="%" />
                         <StatDisplay label="3P%" value={player.season_fg3_pct} suffix="%" />
                         <StatDisplay label="MPG" value={player.season_mpg} />

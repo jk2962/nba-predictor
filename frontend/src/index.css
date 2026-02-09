@@ -421,17 +421,9 @@ a:hover {
   border: 1px solid var(--border);
 }
 
-.position-G {
-  background: var(--cold);
-  color: white;
-}
-
-.position-F {
-  background: var(--success);
-  color: white;
-}
-
+.position-G,
+.position-F,
 .position-C {
-  background: var(--hot);
-  color: white;
+  background: var(--surface-3);
+  color: var(--text-primary);
 }

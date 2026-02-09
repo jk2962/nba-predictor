@@ -146,7 +146,6 @@ export default function PlayerCard({ player, statFilter = 'fantasy' }: PlayerCar
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'space-between',
                         gap: 'var(--space-md)',
                     }}>
                         <p style={{

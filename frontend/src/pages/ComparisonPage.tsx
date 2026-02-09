@@ -183,9 +183,9 @@ export default function ComparisonPage() {
                                         Season Averages
                                     </h4>
                                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
-                                        <StatCell label="PPG" value={info.season_ppg} color="#6366f1" />
-                                        <StatCell label="RPG" value={info.season_rpg} color="#22c55e" />
-                                        <StatCell label="APG" value={info.season_apg} color="#f97316" />
+                                        <StatCell label="PPG" value={info.season_ppg} />
+                                        <StatCell label="RPG" value={info.season_rpg} />
+                                        <StatCell label="APG" value={info.season_apg} />
                                     </div>
                                 </div>
 
@@ -204,19 +204,16 @@ export default function ComparisonPage() {
                                             <StatCell
                                                 label="PTS"
                                                 value={prediction.predicted_points}
-                                                color="#6366f1"
                                                 isPrediction
                                             />
                                             <StatCell
                                                 label="REB"
                                                 value={prediction.predicted_rebounds}
-                                                color="#22c55e"
                                                 isPrediction
                                             />
                                             <StatCell
                                                 label="AST"
                                                 value={prediction.predicted_assists}
-                                                color="#f97316"
                                                 isPrediction
                                             />
                                         </div>
