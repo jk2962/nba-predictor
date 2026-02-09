@@ -17,7 +17,7 @@ import type {
 // Create axios instance
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || '',
-    timeout: 10000,
+    timeout: 60000, // 60 seconds to handle Render cold starts
     headers: {
         'Content-Type': 'application/json',
     },
