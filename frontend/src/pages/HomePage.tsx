@@ -171,7 +171,7 @@ export default function HomePage() {
                 ) : (
                     <>
                         {/* Player Cards Grid */}
-                        <div className="grid-players">
+                        <div key={currentPage} className="grid-players page-transition">
                             {paginatedPlayers.map((player, index) => (
                                 <div
                                     key={player.player_id}

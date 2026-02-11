@@ -450,7 +450,7 @@ export default function PlayerBrowser() {
 
                 {/* Grid View */}
                 {!loading && !error && viewMode === 'grid' && (
-                    <div style={{
+                    <div key={page} className="page-transition" style={{
                         display: 'grid',
                         gridTemplateColumns: 'repeat(3, 1fr)',
                         gap: '1.5rem',
@@ -472,7 +472,7 @@ export default function PlayerBrowser() {
 
                 {/* Table View */}
                 {!loading && !error && viewMode === 'table' && (
-                    <div style={{
+                    <div key={page} className="page-transition" style={{
                         overflow: 'auto',
                         background: 'var(--surface-1)',
                         borderRadius: 'var(--radius-lg)',
