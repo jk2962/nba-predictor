@@ -1,7 +1,7 @@
 /**
  * NBA Player Performance Prediction - Main App
  */
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 
 import HomePage from './pages/HomePage';
@@ -11,20 +11,23 @@ import DraftHelperPage from './pages/DraftHelperPage';
 import BrowsePage from './pages/BrowsePage';
 import './index.css';
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+
   return (
-    <Router>
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <Navbar />
-        <main style={{ flex: 1 }}>
-          <Routes>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Navbar />
+      <main style={{ flex: 1, overflow: 'hidden' }}>
+        <div key={location.pathname} className="page-transition" style={{ minHeight: '100%' }}>
+          <Routes location={location}>
             <Route path="/" element={<HomePage />} />
             <Route path="/browse" element={<BrowsePage />} />
             <Route path="/player/:playerId" element={<PlayerDetailPage />} />
             <Route path="/compare" element={<ComparisonPage />} />
             <Route path="/draft" element={<DraftHelperPage />} />
           </Routes>
-        </main>
+        </div>
+      </main>
 
         {/* Footer */}
         <footer style={{
@@ -72,9 +75,14 @@ function App() {
             <span>View on GitHub</span>
           </a>
         </footer>
-
-
       </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }
